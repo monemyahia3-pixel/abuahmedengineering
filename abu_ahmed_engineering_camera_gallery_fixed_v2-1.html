@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1015">
+<title>أبو أحمد الهندسية AI — تجربة الكاميرا</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#0b1015;color:#eef4f7;font-family:Tahoma,Arial,sans-serif}
+.wrap{max-width:850px;margin:auto;padding:18px}
+header{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #293640;padding:12px 0 18px;flex-wrap:wrap}
+.logo{font-size:22px;font-weight:800}.logo span{color:#35d07f}
+.badge{background:#14251d;color:#7be8aa;border-radius:20px;padding:8px 11px;font-size:12px}
+h1{font-size:28px;margin:25px 0 8px}p{color:#b8c4cc;line-height:1.8}
+.card{background:#121920;border:1px solid #293640;border-radius:16px;padding:18px;margin:16px 0}
+label{display:block;margin:12px 0 7px;color:#c6d0d7;font-size:14px}
+input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #34434d;background:#0b1117;color:#fff;font-size:16px}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+button,.filebtn{min-height:46px;padding:12px 15px;border:0;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.primary{background:#35d07f;color:#06110a}.secondary,.filebtn{background:#26343e;color:#fff}.danger{background:#643238;color:#fff}
+video,img{display:block;width:100%;max-height:420px;object-fit:contain;background:#05080b;border-radius:12px;margin-top:12px}
+.hidden{display:none!important}.status{padding:12px;border-radius:10px;background:#0b1117;border:1px solid #293640;color:#c4d0d7;line-height:1.7;margin-top:12px}
+.small{font-size:12px;color:#91a0aa}.note{border-right:3px solid #e0b65e;padding-right:10px;color:#f0d99d}
+footer{color:#74828c;text-align:center;padding:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo">أبو أحمد <span>الهندسية AI</span></div><div class="badge">وضع اختبار الكاميرا</div></header>
+<h1>📷 تصوير الفيشة والحساس</h1>
+<p>هذه نسخة اختبارية من واجهة المنصة. جرّب تشغيل الكاميرا والتقاط صورة للفيشة أو الأسلاك. الصورة تبقى على جهازك في هذه الصفحة ولا تُرسل تلقائيًا لأي جهة.</p>
+
+<section class="card">
+<label for="language">🌍 لغة التحليل (تُختار تلقائياً ويمكنك تغييرها)</label>
+<select id="language">
+<option value="auto">تلقائي حسب لغة الهاتف / المتصفح</option>
+<option value="ar">العربية</option><option value="en">English — الإنجليزية</option><option value="fr">Français — الفرنسية</option><option value="es">Español — الإسبانية</option><option value="de">Deutsch — الألمانية</option><option value="pt">Português — البرتغالية</option><option value="ru">Русский — الروسية</option>
+<option value="zh-CN">中文（简体）— الصينية المبسطة</option><option value="zh-TW">繁體中文 — الصينية التقليدية</option><option value="ja">日本語 — اليابانية</option><option value="ko">한국어 — الكورية</option><option value="mn">Монгол — المنغولية</option>
+<option value="ha">Hausa — الهوسا</option><option value="yo">Yorùbá — اليوروبا</option><option value="ig">Igbo — الإيبو</option><option value="ff">Fulfulde — الفولفولدي</option><option value="wo">Wolof — الولوف</option><option value="bm">Bamanankan — البامبارا</option>
+</select>
+<label for="purpose">شنو داير تصوّر؟</label>
+<select id="purpose">
+<option>فيشة الحساس — جهة الأسلاك</option>
+<option>فيشة الحساس — جهة الأطراف</option>
+<option>الحساس نفسه</option>
+<option>الأسلاك وتوصيلاتها</option>
+<option>قراءة الأفوميتر</option>
+<option>شاشة ThinkDiag</option>
+</select>
+<div class="actions">
+<button class="primary" id="start">📷 تشغيل الكاميرا</button>
+<button class="secondary" id="switch" disabled>🔄 تبديل الكاميرا</button>
+<label class="filebtn" for="file" style="margin:0">🖼️ اختيار صورة من المعرض</label>
+<input id="file" type="file" accept="image/*" class="hidden">
+<label class="filebtn" for="cameraFile" style="margin:0">📷 التقاط صورة بكاميرا الهاتف</label>
+<input id="cameraFile" type="file" accept="image/*" capture="environment" class="hidden">
+</div>
+<video id="video" autoplay playsinline class="hidden"></video>
+<div class="actions hidden" id="captureActions">
+<button class="primary" id="capture">📸 التقاط الصورة</button>
+<button class="secondary" id="stop">إيقاف الكاميرا</button>
+</div>
+<canvas id="canvas" class="hidden"></canvas>
+<img id="preview" alt="معاينة الصورة الملتقطة" class="hidden">
+<div class="actions hidden" id="imageActions">
+<button class="primary" id="sendAI">🤖 إرسال الصورة إلى الذكاء الاصطناعي</button>
+<button class="secondary" id="download">⬇️ حفظ الصورة</button>
+<button class="secondary" id="retake">🔁 إعادة التصوير</button>
+<button class="danger" id="clear">حذف الصورة</button>
+</div>
+<div id="status" class="status" role="status" aria-live="polite">جاهز للاختبار. اضغط «تشغيل الكاميرا» واسمح للمتصفح باستخدام الكاميرا.</div>
+<p class="small note">ملاحظة مهمة: تشغيل الكاميرا داخل الصفحة يحتاج عادةً إلى HTTPS أو سياق محلي موثوق، وإلى إذن الكاميرا. إذا لم تعمل من ملف HTML محفوظ على الهاتف، افتح نسخة منشورة على رابط HTTPS؛ هذه الصفحة وحدها ليست منصة منشورة على الإنترنت.</p>
+</section>
+
+<section class="card">
+<h2>🔍 بعد التصوير</h2>
+<p>راجع وضوح الصورة قبل استخدامها في التشخيص. أظهر قفل الفيشة وعدد الأطراف، وصوّر جهة الأسلاك وجهة الأطراف كلٌّ على حدة. لا تعتمد على ألوان الأسلاك أو ترتيب الأرجل من صورة غير واضحة.</p>
+<p><b>مهم:</b> زر المشاركة يفتح قائمة مشاركة الهاتف؛ اختر ChatGPT إذا ظهر، ثم اضغط إرسال داخل ChatGPT. هذه النسخة لا تتصل بعدُ بخادم AI خاص بالمنصة؛ إنها تفتح قائمة مشاركة الهاتف وتضيف تعليمات التحليل باللغة المختارة. يجب اختيار ChatGPT ثم إرسال الصورة هناك.</p>
+</section>
+<footer>أبو أحمد الهندسية AI · نموذج تجريبي للكاميرا</footer>
+</div>
+<script>
+(function(){
+ const $=id=>document.getElementById(id);
+ const video=$('video'), preview=$('preview'), status=$('status');
+ let stream=null, facing='environment', currentUrl=null;
+  function say(msg){status.textContent=msg}
+  const languageSelect=$('language');
+  try { const saved=localStorage.getItem('abuAhmedAnalysisLanguage'); if(saved && [...languageSelect.options].some(o=>o.value===saved)) languageSelect.value=saved; } catch(e) {}
+  languageSelect.addEventListener('change',()=>{try{localStorage.setItem('abuAhmedAnalysisLanguage',languageSelect.value)}catch(e){}; const chosen=languageSelect.value; const browserLang=(navigator.language||'ar').toLowerCase(); const detected=browserLang.startsWith('zh-tw')||browserLang.startsWith('zh-hk')?'zh-TW':browserLang.startsWith('zh')?'zh-CN':browserLang.split('-')[0]; const names={ar:'العربية',en:'English',fr:'الفرنسية',es:'الإسبانية',de:'الألمانية',pt:'البرتغالية',ru:'الروسية','zh-CN':'الصينية المبسطة','zh-TW':'الصينية التقليدية',ja:'اليابانية',ko:'الكورية',mn:'المنغولية',ha:'الهوسا',yo:'اليوروبا',ig:'الإيبو',ff:'الفولفولدي',wo:'الولوف',bm:'البامبارا'}; const active=chosen==='auto'?(names[detected]||'English'):(names[chosen]||chosen); say('تم اختيار لغة التحليل: '+active+'. عند إرسال الصورة، أرسلها في ChatGPT ليُنتج التحليل باللغة المختارة.');});
+ function stopCamera(){
+   if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+   video.srcObject=null; video.classList.add('hidden');
+   $('captureActions').classList.add('hidden'); $('switch').disabled=true;
+ }
+ function openPhoneCameraFallback(message){
+    say(message + ' سنفتح الآن اختيار التصوير من الهاتف كحل بديل.');
+    $('cameraFile').click();
+  }
+
+  async function startCamera(){
+    if(!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      openPhoneCameraFallback('التصوير المباشر غير متاح عند فتح ملف HTML محفوظ على الهاتف.');
+      return;
+    }
+    stopCamera();
+    try{
+      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing}},audio:false});
+      video.srcObject=stream;
+      video.classList.remove('hidden');
+      await video.play();
+      $('captureActions').classList.remove('hidden');
+      $('switch').disabled=false;
+      say('الكاميرا تعمل. وجّهها إلى الفيشة، ثبّت الهاتف، ثم اضغط «التقاط الصورة».');
+    }catch(e){
+      let msg='تعذّر تشغيل الكاميرا.';
+      if(e.name==='NotAllowedError') msg='لم يسمح المتصفح بالتصوير المباشر أو لم يُمنح الإذن.';
+      else if(e.name==='NotFoundError') msg='لم يتم العثور على كاميرا متاحة.';
+      else if(e.name==='NotReadableError') msg='الكاميرا مستخدمة من تطبيق آخر. أغلقه ثم أعد المحاولة.';
+      else msg='قد يحتاج التصوير المباشر إلى فتح الصفحة عبر رابط HTTPS.';
+      stopCamera();
+      openPhoneCameraFallback(msg);
+    }
+  }
+  function showImage(blob){
+   if(!blob){say('لم يتم استلام صورة. ارجع واختر الصورة مرة أخرى.');return}
+   if(currentUrl)URL.revokeObjectURL(currentUrl);
+   currentUrl=URL.createObjectURL(blob);
+   preview.onload=()=>say('ظهرت الصورة بنجاح داخل المنصة. اضغط «إرسال الصورة إلى الذكاء الاصطناعي» لمشاركتها مع ChatGPT.');
+   preview.onerror=()=>say('تم اختيار الملف لكن تعذّر عرض الصورة. جرّب صورة JPG أو PNG أخرى.');
+   preview.src=currentUrl;
+   preview.classList.remove('hidden');
+   $('imageActions').classList.remove('hidden');
+ }
+ $('start').addEventListener('click',startCamera);
+ $('switch').addEventListener('click',()=>{facing=facing==='environment'?'user':'environment';startCamera()});
+ $('stop').addEventListener('click',()=>{stopCamera();say('تم إيقاف الكاميرا.')});
+ $('capture').addEventListener('click',()=>{
+   if(!video.videoWidth){say('انتظر حتى تظهر صورة الكاميرا ثم أعد المحاولة.');return}
+   const c=$('canvas');c.width=video.videoWidth;c.height=video.videoHeight;
+   c.getContext('2d').drawImage(video,0,0,c.width,c.height);
+   c.toBlob(blob=>{if(blob)showImage(blob);else say('لم نتمكن من تجهيز الصورة. حاول مرة أخرى.')},'image/jpeg',.92);
+ });
+ function handleSelectedImage(e){
+   const f=e.target.files&&e.target.files[0];if(!f)return;
+   if(!f.type.startsWith('image/')){say('الملف المختار ليس صورة.');return}
+   stopCamera();showImage(f);
+ }
+ $('file').addEventListener('change',handleSelectedImage);
+ $('cameraFile').addEventListener('change',handleSelectedImage);
+ $('sendAI').addEventListener('click',async()=>{
+   if(!currentUrl){say('التقط صورة أو اختر صورة أولاً.');return}
+   const purpose=$('purpose').value;
+   const languageNames={ar:'العربية',en:'English',fr:'français',es:'español',de:'Deutsch',pt:'português',ru:'русский','zh-CN':'简体中文','zh-TW':'繁體中文',ja:'日本語',ko:'한국어',mn:'монгол хэл',ha:'Hausa',yo:'Yorùbá',ig:'Igbo',ff:'Fulfulde',wo:'Wolof',bm:'Bamanankan'};
+   const chosen=$('language').value;
+   const browserLang=(navigator.language||'ar').toLowerCase();
+   const detected=browserLang.startsWith('zh-tw')||browserLang.startsWith('zh-hk')?'zh-TW':browserLang.startsWith('zh')?'zh-CN':browserLang.split('-')[0];
+   const supported=Object.keys(languageNames);
+   const lang=(chosen==='auto'?(supported.includes(detected)?detected:'en'):chosen);
+   const outputLanguage=languageNames[lang]||'English';
+   const prompt='You are the automotive diagnostic assistant for Abu Ahmed Engineering. Analyze the attached image carefully and write the ENTIRE analysis, questions, safety warnings, and steps in '+outputLanguage+' ('+lang+'). Use clear language suitable for an automotive technician. Image type: '+purpose+'. Describe only what is visibly supported by the image and clearly state uncertainty. Never guess connector pin numbers or wire colors. Keep diagnostic trouble codes, measurements, and units accurate. Ask for vehicle make, model, year, and engine when needed. Give safe step-by-step multimeter checks, do not invent specifications, and explain that image inspection is preliminary and does not replace the correct vehicle wiring diagram.';
+   try{
+     const response=await fetch(currentUrl);
+     const blob=await response.blob();
+     const file=new File([blob],'abu-ahmed-engineering-photo.jpg',{type:blob.type||'image/jpeg'});
+     if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+       await navigator.share({title:'أبو أحمد الهندسية — تحليل صورة',text:prompt,files:[file]});
+       say('تم فتح قائمة المشاركة. اختر ChatGPT ثم أرسل الصورة والنص؛ تعليمات التحليل تطلب الإجابة باللغة التي اخترتها.');
+     }else{
+       const a=document.createElement('a');a.href=currentUrl;a.download='abu-ahmed-engineering-photo.jpg';document.body.appendChild(a);a.click();a.remove();
+       say('هذا المتصفح لا يدعم مشاركة الصورة مباشرة. تم تنزيل الصورة؛ افتح ChatGPT وأرفق الصورة والصق وصف الفحص الموجود في التعليمات أسفل الصفحة.');
+       alert('الصورة لا تُرسل تلقائياً من ملف HTML. افتح ChatGPT وأرفق الصورة التي تم تنزيلها.');
+     }
+   }catch(e){
+     if(e.name==='AbortError'){say('أغلقت قائمة المشاركة. الصورة ما زالت محفوظة في المعاينة.');return}
+     say('تعذرت المشاركة من المتصفح. استخدم «حفظ الصورة» ثم أرفقها في ChatGPT.');
+   }
+ });
+ $('download').addEventListener('click',()=>{
+   if(!currentUrl)return;
+   const a=document.createElement('a');a.href=currentUrl;a.download='abu-ahmed-engineering-photo.jpg';document.body.appendChild(a);a.click();a.remove();
+ });
+ $('retake').addEventListener('click',()=>{preview.classList.add('hidden');$('imageActions').classList.add('hidden');startCamera()});
+ $('clear').addEventListener('click',()=>{
+   preview.removeAttribute('src');preview.classList.add('hidden');$('imageActions').classList.add('hidden');
+   if(currentUrl){URL.revokeObjectURL(currentUrl);currentUrl=null}
+   $('file').value='';say('تم حذف الصورة من المعاينة. يمكنك التقاط صورة جديدة.');
+ });
+ window.addEventListener('pagehide',stopCamera);
+})();
+</script>
+</body>
+</html>
