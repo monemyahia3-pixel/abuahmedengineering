@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101820">
+<title>أبو أحمد الهندسية | تشخيص وإصلاح السيارات</title>
+<style>
+:root{--bg:#0b1118;--panel:#151f2b;--panel2:#1d2a38;--line:#304254;--text:#edf4fa;--muted:#a9bac9;--accent:#f0a23a;--green:#29b56d;--blue:#4da3ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;line-height:1.65}
+header{padding:22px 16px;background:linear-gradient(135deg,#172738,#0d141d);border-bottom:1px solid var(--line)}
+.wrap{max-width:920px;margin:auto;padding:0 14px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-size:22px;font-weight:800}.brand small{display:block;color:var(--muted);font-size:12px;font-weight:500}
+select,input,textarea,button{font:inherit}select,input,textarea{background:#0d1721;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px;width:100%}
+button,.button{border:0;border-radius:10px;padding:11px 15px;background:var(--accent);color:#17120a;font-weight:800;cursor:pointer}
+button.secondary{background:#26394b;color:var(--text);border:1px solid var(--line)}button.green{background:var(--green);color:#07170e}
+.hero{padding:26px 0 12px}.hero h1{font-size:clamp(25px,5vw,38px);line-height:1.25;margin:0 0 10px}.hero p{color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px;margin:18px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 8px 25px #0002}
+.card h2{font-size:19px;margin:0 0 8px}.muted{color:var(--muted);font-size:14px}.field{margin:10px 0}.field label{display:block;margin-bottom:5px;font-weight:650}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.actions button{flex:1}
+.notice{background:#332817;border:1px solid #725326;color:#ffe0a8;padding:12px;border-radius:12px;font-size:13px;margin-top:12px}
+#preview{display:none;width:100%;max-height:280px;object-fit:contain;background:#080d12;border-radius:12px;margin-top:12px}
+.result{white-space:pre-wrap;background:#0d1721;border:1px dashed var(--line);border-radius:12px;padding:12px;min-height:55px;margin-top:12px}
+footer{text-align:center;color:var(--muted);padding:28px 10px;border-top:1px solid var(--line);margin-top:24px;font-size:13px}
+@media(max-width:480px){.brand{font-size:19px}.top{align-items:flex-start}}
+</style>
+</head>
+<body>
+<header><div class="wrap top">
+  <div class="brand" data-ar="أبو أحمد الهندسية" data-en="Abu Ahmed Engineering">أبو أحمد الهندسية
+    <small data-ar="فحص وإصلاح السيارات والمخططات الكهربائية" data-en="Vehicle diagnostics, repair and wiring diagrams">فحص وإصلاح السيارات والمخططات الكهربائية</small>
+  </div>
+  <select id="language" aria-label="Language" style="width:auto;min-width:125px">
+    <option value="auto">تلقائي / Auto</option><option value="ar">العربية</option><option value="en">English</option><option value="fr">Français</option>
+  </select>
+</div></header>
+<main class="wrap">
+<section class="hero">
+  <h1 data-ar="مساعدك الفني لتشخيص أعطال السيارات" data-en="Your automotive diagnostic assistant" data-fr="Votre assistant de diagnostic automobile">مساعدك الفني لتشخيص أعطال السيارات</h1>
+  <p data-ar="ابدأ بتسجيل بيانات السيارة والعطل، ثم اتبع خطوات الفحص الآمن." data-en="Enter the vehicle and fault details, then follow safe inspection steps." data-fr="Saisissez les données du véhicule et la panne, puis suivez les étapes de contrôle en toute sécurité.">ابدأ بتسجيل بيانات السيارة والعطل، ثم اتبع خطوات الفحص الآمن.</p>
+</section>
+<section class="grid">
+  <div class="card">
+    <h2 data-ar="بيانات السيارة" data-en="Vehicle details" data-fr="Données du véhicule">بيانات السيارة</h2>
+    <div class="field"><label data-ar="الشركة والطراز" data-en="Make and model" data-fr="Marque et modèle">الشركة والطراز</label><input id="vehicle" placeholder="مثال: Hyundai Elantra"></div>
+    <div class="field"><label data-ar="سنة الصنع" data-en="Year" data-fr="Année">سنة الصنع</label><input id="year" inputmode="numeric" placeholder="2007"></div>
+    <div class="field"><label data-ar="المحرك" data-en="Engine" data-fr="Moteur">المحرك</label><input id="engine" placeholder="1.6L"></div>
+    <div class="field"><label data-ar="رمز العطل (إن وجد)" data-en="DTC code (if available)" data-fr="Code défaut (si disponible)">رمز العطل (إن وجد)</label><input id="dtc" placeholder="P0336"></div>
+  </div>
+  <div class="card">
+    <h2 data-ar="وصف المشكلة" data-en="Fault description" data-fr="Description de la panne">وصف المشكلة</h2>
+    <div class="field"><label data-ar="ماذا يحدث؟" data-en="What happens?" data-fr="Que se passe-t-il ?">ماذا يحدث؟</label><textarea id="fault" rows="5" placeholder="مثال: المحرك يدور ولا يعمل..."></textarea></div>
+    <button class="green" onclick="makeChecklist()" data-ar="إنشاء خطوات الفحص الأولية" data-en="Create initial check steps" data-fr="Créer les premières étapes">إنشاء خطوات الفحص الأولية</button>
+    <div id="checklist" class="result" data-ar="ستظهر هنا خطوات الفحص الأولية." data-en="Initial inspection steps will appear here." data-fr="Les premières étapes apparaîtront ici.">ستظهر هنا خطوات الفحص الأولية.</div>
+  </div>
+</section>
+<section class="grid">
+  <div class="card">
+    <h2 data-ar="تصوير الفيشة أو الحساس" data-en="Photograph a connector or sensor" data-fr="Photographier un connecteur ou capteur">تصوير الفيشة أو الحساس</h2>
+    <p class="muted" data-ar="التقط صورة واضحة للقطعة أو اختر صورة من الهاتف." data-en="Take a clear photo of the part or choose one from your phone." data-fr="Prenez une photo nette ou choisissez une image du téléphone.">التقط صورة واضحة للقطعة أو اختر صورة من الهاتف.</p>
+    <input id="photo" type="file" accept="image/*" capture="environment">
+    <img id="preview" alt="معاينة الصورة">
+    <div class="notice" data-ar="تنبيه: هذه النسخة تعرض الصورة فقط؛ تحليل الذكاء الاصطناعي يحتاج إلى ربط خدمة خلفية آمنة." data-en="Note: this version only previews the image. AI analysis requires a secure backend connection." data-fr="Remarque : cette version affiche seulement l’image. L’analyse IA nécessite un serveur sécurisé.">تنبيه: هذه النسخة تعرض الصورة فقط؛ تحليل الذكاء الاصطناعي يحتاج إلى ربط خدمة خلفية آمنة.</div>
+  </div>
+  <div class="card">
+    <h2 data-ar="اتصال OBD-II" data-en="OBD-II connection" data-fr="Connexion OBD-II">اتصال OBD-II</h2>
+    <p class="muted" data-ar="جهّز جهاز ELM327 وافتح البلوتوث من الهاتف. دعم الاتصال المباشر يعتمد على المتصفح والجهاز." data-en="Prepare your ELM327 and enable Bluetooth. Direct connection depends on browser and adapter support." data-fr="Préparez votre ELM327 et activez Bluetooth. La connexion dépend du navigateur et de l’adaptateur.">جهّز جهاز ELM327 وافتح البلوتوث من الهاتف. دعم الاتصال المباشر يعتمد على المتصفح والجهاز.</p>
+    <button class="secondary" onclick="obdInfo()" data-ar="فحص إمكانية الاتصال" data-en="Check connection support" data-fr="Vérifier la compatibilité">فحص إمكانية الاتصال</button>
+    <div id="obdresult" class="result" data-ar="لم يتم الاتصال بعد." data-en="Not connected yet." data-fr="Pas encore connecté.">لم يتم الاتصال بعد.</div>
+    <div class="notice" data-ar="لا تعتمد على قراءة واحدة لاتخاذ قرار إصلاح؛ قارن القيم بمواصفات السيارة ومخططها الصحيح." data-en="Never base a repair decision on one reading; compare values with vehicle specifications and the correct wiring diagram." data-fr="Ne prenez pas une décision sur une seule mesure ; comparez aux spécifications et au schéma corrects.">لا تعتمد على قراءة واحدة لاتخاذ قرار إصلاح؛ قارن القيم بمواصفات السيارة ومخططها الصحيح.</div>
+  </div>
+</section>
+</main>
+<footer data-ar="© أبو أحمد الهندسية — أداة مساعدة أولية للفنيين" data-en="© Abu Ahmed Engineering — preliminary technician support tool" data-fr="© Abu Ahmed Engineering — outil d’aide préliminaire aux techniciens">© أبو أحمد الهندسية — أداة مساعدة أولية للفنيين</footer>
+<script>
+const translations = {
+ ar:{placeholderVehicle:"مثال: Hyundai Elantra"},
+ en:{placeholderVehicle:"e.g. Hyundai Elantra"},
+ fr:{placeholderVehicle:"ex. Hyundai Elantra"}
+};
+function chooseLang(){
+ const chosen=document.getElementById('language').value;
+ if(chosen!=='auto') return chosen;
+ const nav=(navigator.language||'en').toLowerCase();
+ return nav.startsWith('ar')?'ar':nav.startsWith('fr')?'fr':'en';
+}
+function applyLanguage(){
+ const lang=chooseLang();
+ document.documentElement.lang=lang;
+ document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+ document.querySelectorAll('[data-'+lang+']').forEach(el=>el.textContent=el.getAttribute('data-'+lang));
+ document.getElementById('vehicle').placeholder=translations[lang].placeholderVehicle;
+}
+document.getElementById('language').addEventListener('change',applyLanguage);applyLanguage();
+document.getElementById('photo').addEventListener('change',e=>{
+ const file=e.target.files[0];if(!file)return;
+ const img=document.getElementById('preview');img.src=URL.createObjectURL(file);img.style.display='block';
+});
+function makeChecklist(){
+ const lang=chooseLang(), v=document.getElementById('vehicle').value, y=document.getElementById('year').value,
+ en=document.getElementById('engine').value, dtc=document.getElementById('dtc').value, fault=document.getElementById('fault').value;
+ const ar=`بيانات السيارة: ${v||'غير محدد'}، السنة: ${y||'غير محددة'}، المحرك: ${en||'غير محدد'}\nرمز العطل: ${dtc||'غير موجود'}\nوصف المشكلة: ${fault||'لم يُكتب وصف'}\n\nخطوات أولية آمنة:\n1) تأكد من جهد البطارية وسلامة الأقطاب.\n2) اقرأ جميع رموز الأعطال واحفظ بيانات Freeze Frame قبل المسح.\n3) افحص الفيوزات والتوصيلات بصرياً مع إطفاء الإشعال عند فصل الفيش.\n4) استخدم مخطط الأسلاك المطابق تماماً للطراز والمحرك لتحديد أطراف القياس.\n5) لا تقِس المقاومة في دائرة موصولة بالطاقة، ولا توصل أطراف الفيش عشوائياً.\n6) سجّل قراءات الأفوميتر والوحدات وظروف الاختبار.`;
+ const enText=`Vehicle: ${v||'not specified'}, year: ${y||'not specified'}, engine: ${en||'not specified'}\nDTC: ${dtc||'none entered'}\nFault: ${fault||'no description'}\n\nSafe initial checks:\n1) Check battery voltage and terminal condition.\n2) Read and save all DTCs and freeze-frame data before clearing codes.\n3) Visually inspect fuses and wiring; switch ignition off before disconnecting connectors.\n4) Use the exact wiring diagram for this vehicle and engine to identify test pins.\n5) Never measure resistance on a powered circuit or randomly bridge connector pins.\n6) Record meter readings, units, and test conditions.`;
+ const fr=`Véhicule : ${v||'non précisé'}, année : ${y||'non précisée'}, moteur : ${en||'non précisé'}\nCode : ${dtc||'non indiqué'}\nPanne : ${fault||'non décrite'}\n\nContrôles initiaux sûrs :\n1) Vérifier la tension de batterie et les bornes.\n2) Lire et sauvegarder les codes et les données figées avant effacement.\n3) Inspecter visuellement fusibles et câblage ; couper le contact avant de débrancher.\n4) Utiliser le schéma exact du véhicule et du moteur pour identifier les broches.\n5) Ne jamais mesurer une résistance sur un circuit alimenté ni ponter des broches au hasard.\n6) Noter les mesures, unités et conditions du test.`;
+ document.getElementById('checklist').textContent=({ar,en:enText,fr})[lang];
+}
+function obdInfo(){
+ const lang=chooseLang();
+ document.getElementById('obdresult').textContent=lang==='ar'?'هذه الصفحة التجريبية لا تنشئ اتصال ELM327 بعد. استخدم تطبيق Torque حالياً لقراءة البيانات، وسنربط الاتصال داخل المنصة في مرحلة تطوير Android.':lang==='fr'?'Cette version ne se connecte pas encore à l’ELM327. Utilisez provisoirement votre application OBD.':'This prototype does not connect to ELM327 yet. Use your OBD app for live data for now; in-app Android integration is a later development step.';
+}
+</script>
+</body>
+</html>
